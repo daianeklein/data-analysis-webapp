@@ -1,0 +1,32 @@
+body {
+	font-family: sans-serif;
+	color: rgb(82, 0, 183);
+}
+
+
+#first-line-separator{
+	border-style: solid;
+	border-width: 4px;
+	border-color: rgb(66, 7, 138);
+
+}
+
+.div-header-config {
+	text-align: left;
+	color : #000000;
+	align-items: center;
+	padding-top: 1em;
+}
+
+#drag-and-drop-text {
+	font-size: 12px;
+	font-weight: lighter;
+	color: blueviolet;
+}
+
+#upload-data{
+	align-items: center;
+	margin-top: 5em;
+	color: rgb(25, 0, 127);
+}
+

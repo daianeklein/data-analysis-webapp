@@ -4,6 +4,7 @@ import io
 
 import dash
 from dash.dependencies import Input, Output, State
+import dash_bootstrap_components as dbc
 from dash import dcc, html
 from dash import dash_table
 import plotly.express as px
@@ -11,18 +12,29 @@ import plotly.express as px
 import pandas as pd
 
 
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+#external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets,
-                suppress_callback_exceptions=True)
+# app = dash.Dash(__name__, external_stylesheets=external_stylesheets,
+#                 suppress_callback_exceptions=True)
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.SKETCHY],
+                meta_tags = [{'name' : 'viewport',
+                              'content' : 'width=dice_width, initial-scale=1.0'}])
 
-app.layout = html.Div([ # this code section taken from Dash docs https://dash.plotly.com/dash-core-components/upload
+# this code section taken from Dash docs https://dash.plotly.com/dash-core-components/upload
+app.layout = dbc.Container([
+    html.P(' '),
+    html.Div(id = 'first-line-separator'),
+    html.Div([
+        html.H2('Customer Segmentation', className = 'general-title'),
+        html.H5('This is a subtitle - Describe the the aim of the analysis and the dashboard')
+    ], className = 'div-header-config'),
+    html.Div([
     dcc.Upload(
         id='upload-data',
         children=html.Div([
             'Drag and Drop or ',
             html.A('Select Files')
-        ]),
+        ], id = 'drag-and-drop-text'),
         style={
             'width': '100%',
             'height': '60px',
@@ -39,7 +51,7 @@ app.layout = html.Div([ # this code section taken from Dash docs https://dash.pl
     html.Div(id='output-div'),
     html.Div(id='output-datatable'),
 ])
-
+])
 
 def parse_contents(contents, filename, date):
     content_type, content_string = contents.split(',')
