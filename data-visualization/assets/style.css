@@ -24,9 +24,25 @@ body {
 	color: blueviolet;
 }
 
-#upload-data{
+#upload-data-first{
 	align-items: center;
 	margin-top: 5em;
 	color: rgb(25, 0, 127);
 }
 
+#file-uploaded-name{
+	text-align: right;
+	font-size: 10px;
+	font-weight: lighter;
+}
+
+#first-box-drag-and-drop{
+	background-color: red;
+	margin-left: 1em;
+}
+
+#second-box-drag-and-drop{
+	background-color: blue;
+	margin-left: 1em;
+
+}

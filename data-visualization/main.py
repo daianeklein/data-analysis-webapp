@@ -11,49 +11,47 @@ import plotly.express as px
 
 import pandas as pd
 
-
-#external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-
-# app = dash.Dash(__name__, external_stylesheets=external_stylesheets,
-#                 suppress_callback_exceptions=True)
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.SKETCHY],
                 meta_tags = [{'name' : 'viewport',
                               'content' : 'width=dice_width, initial-scale=1.0'}])
 
-# this code section taken from Dash docs https://dash.plotly.com/dash-core-components/upload
 app.layout = dbc.Container([
-    html.P(' '),
-    html.Div(id = 'first-line-separator'),
-    html.Div([
-        html.H2('Customer Segmentation', className = 'general-title'),
-        html.H5('This is a subtitle - Describe the the aim of the analysis and the dashboard')
-    ], className = 'div-header-config'),
-    dbc.row([
-    html.Div([
-    dcc.Upload(
-        id='upload-data-first', #square to drag and drop files
-        children=html.Div([
-            'Drag and Drop or ',
-            html.A('Select Files')
-        ], id = 'drag-and-drop-text'), #text
-        style={
-            'width': '100%',
-            'height': '60px',
-            'lineHeight': '60px',
-            'borderWidth': '1px',
-            'borderStyle': 'dashed',
-            'borderRadius': '5px',
-            'textAlign': 'center',
-            'margin': '10px'
-        },
-        # Allow multiple files to be uploaded
-        multiple=True
-    ),
-    html.Div(id='output-div'),
-    html.Div(id='output-datatable'),
-])
-])
-])
+        html.P(' '),
+        html.Div(id = 'first-line-separator'),
+        html.Div([
+            html.H2('Customer Analysis and Segmentation', className = 'general-title'),
+            html.H5('This is a subtitle - Describe the the aim of the analysis and the dashboard')
+            ], className = 'div-header-config'),
+
+        #first drag and drop box
+        dbc.Row([
+            dbc.Col([
+                html.P('Upload the user dataset'),
+                dcc.Upload(
+                    id = 'uploaded-data-first',
+                    children=html.Div([
+                        'Drag and Drop your file'
+                    ], id = 'drag-and-drop-text'), multiple = False),
+
+                    html.Div(id = 'output-div-first'),
+                    html.Div(id = 'output-datatable-first')
+            ], width = {'size' : 5}, id='first-box-drag-and-drop'),
+
+            #second drag and drop box
+            dbc.Col([            
+            html.P('Upload the transaction dataset'),
+            dcc.Upload(
+                id = 'uploaded-data-second',
+                children=html.Div([
+                    'Drag and Drop your file'
+                    ], id = 'drag-and-drop-text-2nd'), multiple = False),
+
+                    html.Div(id = 'output-div-second'),
+                    html.Div(id = 'output-datatable-second'),
+                ], width = {'size' : 5}, id = 'second-box-drag-and-drop')
+        ]) #closing row 
+
+]) #closing container
 
 def parse_contents(contents, filename, date):
     content_type, content_string = contents.split(',')
@@ -75,13 +73,6 @@ def parse_contents(contents, filename, date):
 
     return html.Div([
         html.H5(filename, id = 'file-uploaded-name'),
-        # html.H6(datetime.datetime.fromtimestamp(date)),
-        # html.P("Inset X axis data"),
-        # dcc.Dropdown(id='xaxis-data',
-        #              options=[{'label':x, 'value':x} for x in df.columns]),
-        # html.P("Inset Y axis data"),
-        # dcc.Dropdown(id='yaxis-data',
-        #              options=[{'label':x, 'value':x} for x in df.columns]),
         html.Button(id="first-submit-button", children="Create Graph"),
         html.Hr(),
 
@@ -101,12 +92,10 @@ def parse_contents(contents, filename, date):
             'wordBreak': 'break-all'
         })
     ])
-
-
-@app.callback(Output('output-datatable', 'children'),
-              Input('upload-data-first', 'contents'),
-              State('upload-data-first', 'filename'),
-              State('upload-data-first', 'last_modified'))
+@app.callback(Output('output-datatable-first', 'children'),
+              Input('uploaded-data-first', 'contents'),
+              State('uploaded-data-first', 'filename'),
+              State('uploaded-data-first', 'last_modified'))
 def update_output(list_of_contents, list_of_names, list_of_dates):
     if list_of_contents is not None:
         children = [
@@ -115,7 +104,7 @@ def update_output(list_of_contents, list_of_names, list_of_dates):
         return children
 
 
-@app.callback(Output('output-div', 'children'),
+@app.callback(Output('output-div-first', 'children'),
               Input('first-submit-button','n_clicks'),
               State('stored-data','data'),
               State('xaxis-data','value'),
@@ -128,7 +117,6 @@ def make_graphs(n, data, x_data, y_data):
         # print(data)
         return dcc.Graph(figure=bar_fig)
 
-
-
 if __name__ == '__main__':
     app.run_server(debug=True)
+
