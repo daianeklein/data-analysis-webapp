@@ -28,7 +28,7 @@ app.layout = dbc.Container([
         html.H2('Customer Segmentation', className = 'general-title'),
         html.H5('This is a subtitle - Describe the the aim of the analysis and the dashboard')
     ], className = 'div-header-config'),
-    dbc.row([
+    dbc.Row([
     html.Div([
     dcc.Upload(
         id='upload-data-first', #square to drag and drop files
