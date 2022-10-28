@@ -23,8 +23,9 @@ app.layout = dbc.Container([
         html.P(' '),
         html.Div(id = 'first-line-separator'),
         html.Div([
-        html.H2('Customer Analysis and Segmentation', className = 'general-title'),
-        html.H5('This is a subtitle - Describe the the aim of the analysis and the dashboard')
+        html.H2('Customer Analysis and Segmentation', id = 'general-title'),
+        html.H5('This is a subtitle - Describe the the aim of the analysis and the dashboard',
+                                                            id = 'dashboard-subtitle')
         ], className = 'div-header-config'),
 
     dbc.Row([
@@ -34,7 +35,7 @@ app.layout = dbc.Container([
         children=html.Div([
             'Drag and Drop or ',
             html.A('Select Files')
-        ]),
+        ], className='drag-and-drop-text'),
         multiple=True),
     html.Div(id='output-data-upload'),
 
@@ -47,7 +48,7 @@ app.layout = dbc.Container([
         children=html.Div([
             'Drag and Drop or ',
             html.A('Select Files')
-        ]),
+        ], className='drag-and-drop-text'),
         multiple=True
     ),
     html.Div(id='second-output-data-upload'),
@@ -86,13 +87,14 @@ def parse_contents(contents, filename, date):
 
              style_data={
             'color' : 'grey',
-            'backgroundColor' : 'transparent'
+            'backgroundColor' : 'transparent',
+            'textAlign': 'center'
             },
 
             virtualization=True,
             fixed_rows={'headers': True},
             style_cell={'minWidth': 95, 'width': 95, 'maxWidth': 95},
-            style_table={'height': 300}
+            style_table={'height': 400}
 
         ),
 
@@ -101,11 +103,11 @@ def parse_contents(contents, filename, date):
         html.Hr(),  # horizontal line
 
         # For debugging, display the raw contents provided by the web browser
-        html.Div('Raw Content'),
-        html.Pre(contents[0:200] + '...', style={
-            'whiteSpace': 'pre-wrap',
-            'wordBreak': 'break-all'
-        })
+        # html.Div('Raw Content', className='raw-content'),
+        # html.Pre(contents[0:200] + '...', style={
+        #     'whiteSpace': 'pre-wrap',
+        #     'wordBreak': 'break-all'
+        # },className='raw-content')
     ])
 
 @app.callback(Output('output-data-upload', 'children'),
