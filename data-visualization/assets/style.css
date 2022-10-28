@@ -74,3 +74,8 @@ body {
 .raw-content{
 	color: transparent;
 }
+
+#submit-button{
+	color: red;
+	
+}

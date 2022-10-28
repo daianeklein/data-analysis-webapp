@@ -79,7 +79,8 @@ def parse_contents(contents, filename, date):
 
     return html.Div([
         html.H5(filename, className = 'file-name-uploaded'),
-
+        html.Div([html.Button('Submit',id="submit-button")]),
+        html.Hr(),
         html.Div([
         dash_table.DataTable(
             df.to_dict('records'),
@@ -98,9 +99,9 @@ def parse_contents(contents, filename, date):
 
         ),
 
-        ], id= 'first-table-output'),
+        ], id= 'first-table-output')
 
-        html.Hr(),  # horizontal line
+#        html.Button('submit-button')
 
         # For debugging, display the raw contents provided by the web browser
         # html.Div('Raw Content', className='raw-content'),
@@ -121,6 +122,7 @@ def update_output(list_of_contents, list_of_names, list_of_dates):
             zip(list_of_contents, list_of_names, list_of_dates)]
         return children
 
+
 @app.callback(Output('second-output-data-upload', 'children'),
               Input('upload-second-data', 'contents'),
               State('upload-second-data', 'filename'),
@@ -131,6 +133,8 @@ def update_output(list_of_contents, list_of_names, list_of_dates):
             parse_contents(c, n, d) for c, n, d in
             zip(list_of_contents, list_of_names, list_of_dates)]
         return children
+        
+
 
 if __name__ == '__main__':
     app.run_server(debug=True)
