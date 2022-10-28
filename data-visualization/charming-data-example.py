@@ -4,38 +4,26 @@ import io
 
 import dash
 from dash.dependencies import Input, Output, State
-import dash_bootstrap_components as dbc
-from dash import dcc, html
-from dash import dash_table
+import dash_core_components as dcc
+import dash_html_components as html
+import dash_table
 import plotly.express as px
 
 import pandas as pd
 
 
-#external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
-# app = dash.Dash(__name__, external_stylesheets=external_stylesheets,
-#                 suppress_callback_exceptions=True)
-app = dash.Dash(__name__, external_stylesheets=[dbc.themes.SKETCHY],
-                meta_tags = [{'name' : 'viewport',
-                              'content' : 'width=dice_width, initial-scale=1.0'}])
+app = dash.Dash(__name__, external_stylesheets=external_stylesheets,
+                suppress_callback_exceptions=True)
 
-# this code section taken from Dash docs https://dash.plotly.com/dash-core-components/upload
-app.layout = dbc.Container([
-    html.P(' '),
-    html.Div(id = 'first-line-separator'),
-    html.Div([
-        html.H2('Customer Segmentation', className = 'general-title'),
-        html.H5('This is a subtitle - Describe the the aim of the analysis and the dashboard')
-    ], className = 'div-header-config'),
-    dbc.Row([
-    html.Div([
+app.layout = html.Div([ # this code section taken from Dash docs https://dash.plotly.com/dash-core-components/upload
     dcc.Upload(
-        id='upload-data-first', #square to drag and drop files
+        id='upload-data',
         children=html.Div([
             'Drag and Drop or ',
             html.A('Select Files')
-        ], id = 'drag-and-drop-text'), #text
+        ]),
         style={
             'width': '100%',
             'height': '60px',
@@ -52,8 +40,7 @@ app.layout = dbc.Container([
     html.Div(id='output-div'),
     html.Div(id='output-datatable'),
 ])
-])
-])
+
 
 def parse_contents(contents, filename, date):
     content_type, content_string = contents.split(',')
@@ -74,15 +61,15 @@ def parse_contents(contents, filename, date):
         ])
 
     return html.Div([
-        html.H5(filename, id = 'file-uploaded-name'),
-        # html.H6(datetime.datetime.fromtimestamp(date)),
-        # html.P("Inset X axis data"),
-        # dcc.Dropdown(id='xaxis-data',
-        #              options=[{'label':x, 'value':x} for x in df.columns]),
-        # html.P("Inset Y axis data"),
-        # dcc.Dropdown(id='yaxis-data',
-        #              options=[{'label':x, 'value':x} for x in df.columns]),
-        html.Button(id="first-submit-button", children="Create Graph"),
+        html.H5(filename),
+        html.H6(datetime.datetime.fromtimestamp(date)),
+        html.P("Inset X axis data"),
+        dcc.Dropdown(id='xaxis-data',
+                     options=[{'label':x, 'value':x} for x in df.columns]),
+        html.P("Inset Y axis data"),
+        dcc.Dropdown(id='yaxis-data',
+                     options=[{'label':x, 'value':x} for x in df.columns]),
+        html.Button(id="submit-button", children="Create Graph"),
         html.Hr(),
 
         dash_table.DataTable(
@@ -104,9 +91,9 @@ def parse_contents(contents, filename, date):
 
 
 @app.callback(Output('output-datatable', 'children'),
-              Input('upload-data-first', 'contents'),
-              State('upload-data-first', 'filename'),
-              State('upload-data-first', 'last_modified'))
+              Input('upload-data', 'contents'),
+              State('upload-data', 'filename'),
+              State('upload-data', 'last_modified'))
 def update_output(list_of_contents, list_of_names, list_of_dates):
     if list_of_contents is not None:
         children = [
@@ -116,7 +103,7 @@ def update_output(list_of_contents, list_of_names, list_of_dates):
 
 
 @app.callback(Output('output-div', 'children'),
-              Input('first-submit-button','n_clicks'),
+              Input('submit-button','n_clicks'),
               State('stored-data','data'),
               State('xaxis-data','value'),
               State('yaxis-data', 'value'))
