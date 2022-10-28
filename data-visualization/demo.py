@@ -7,6 +7,7 @@ from dash.dependencies import Input, Output, State
 from dash import dcc, html, dash_table
 import dash_bootstrap_components as dbc
 
+
 import pandas as pd
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
@@ -28,36 +29,29 @@ app.layout = dbc.Container([
 
     dbc.Row([
         dbc.Col([
- ##       html.Div([
         dcc.Upload(
         id='upload-data',
         children=html.Div([
             'Drag and Drop or ',
             html.A('Select Files')
         ]),
-
-        # Allow multiple files to be uploaded
-        multiple=True
-    ),
+        multiple=True),
     html.Div(id='output-data-upload'),
-##])
+
 ], width = {'size' : 5}, id='first-box-drag-and-drop'),
 
 # second drag and drop
         dbc.Col([
-##        html.Div([
         dcc.Upload(
         id='upload-second-data',
         children=html.Div([
             'Drag and Drop or ',
             html.A('Select Files')
         ]),
-
-        # Allow multiple files to be uploaded
         multiple=True
     ),
     html.Div(id='second-output-data-upload'),
-##])
+
 ], width = {'size' : 5}, id='second-box-drag-and-drop')
 
 ])
@@ -83,13 +77,26 @@ def parse_contents(contents, filename, date):
         ])
 
     return html.Div([
-        html.H5(filename),
-        html.H6(datetime.datetime.fromtimestamp(date)),
+        html.H5(filename, className = 'file-name-uploaded'),
 
+        html.Div([
         dash_table.DataTable(
             df.to_dict('records'),
-            [{'name': i, 'id': i} for i in df.columns]
+            [{'name': i, 'id': i} for i in df.columns],
+
+             style_data={
+            'color' : 'grey',
+            'backgroundColor' : 'transparent'
+            },
+
+            virtualization=True,
+            fixed_rows={'headers': True},
+            style_cell={'minWidth': 95, 'width': 95, 'maxWidth': 95},
+            style_table={'height': 300}
+
         ),
+
+        ], id= 'first-table-output'),
 
         html.Hr(),  # horizontal line
 
@@ -105,6 +112,17 @@ def parse_contents(contents, filename, date):
               Input('upload-data', 'contents'),
               State('upload-data', 'filename'),
               State('upload-data', 'last_modified'))
+def update_output(list_of_contents, list_of_names, list_of_dates):
+    if list_of_contents is not None:
+        children = [
+            parse_contents(c, n, d) for c, n, d in
+            zip(list_of_contents, list_of_names, list_of_dates)]
+        return children
+
+@app.callback(Output('second-output-data-upload', 'children'),
+              Input('upload-second-data', 'contents'),
+              State('upload-second-data', 'filename'),
+              State('upload-second-data', 'last_modified'))
 def update_output(list_of_contents, list_of_names, list_of_dates):
     if list_of_contents is not None:
         children = [
