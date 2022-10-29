@@ -4,12 +4,12 @@ import io
 
 import dash
 from dash.dependencies import Input, Output, State
-import dash_core_components as dcc
-import dash_html_components as html
-import dash_table
-import plotly.express as px
+from dash import dcc, html, dash_table
+import dash_bootstrap_components as dbc
+
 
 import pandas as pd
+import plotly.express as px
 
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']

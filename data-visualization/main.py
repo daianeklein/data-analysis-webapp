@@ -38,22 +38,24 @@ app.layout = dbc.Container([
         ], className='drag-and-drop-text'),
         multiple=True),
     html.Div(id='output-data-upload'),
+    html.Div(id='output-datatable')
 
 ], width = {'size' : 5}, id='first-box-drag-and-drop'),
 
-# second drag and drop
-        dbc.Col([
-        dcc.Upload(
-        id='upload-second-data',
-        children=html.Div([
-            'Drag and Drop or ',
-            html.A('Select Files')
-        ], className='drag-and-drop-text'),
-        multiple=True
-    ),
-    html.Div(id='second-output-data-upload'),
+# # second drag and drop
+#         dbc.Col([
+#         dcc.Upload(
+#         id='upload-second-data',
+#         children=html.Div([
+#             'Drag and Drop or ',
+#             html.A('Select Files')
+#         ], className='drag-and-drop-text'),
+#         multiple=True
+#     ),
+#     html.Div(id='second-output-data-upload'),
+#     html.Div(id = '')
 
-], width = {'size' : 5}, id='second-box-drag-and-drop')
+# ], width = {'size' : 5}, id='second-box-drag-and-drop')
 
 ])
 ])
@@ -79,12 +81,13 @@ def parse_contents(contents, filename, date):
 
     return html.Div([
         html.H5(filename, className = 'file-name-uploaded'),
-        html.Button(id="submit-button", children = 'Submit'),
+        html.Button(id="submit-button", children = 'Create Graph'),
         html.Hr(),
         html.Div([
         dash_table.DataTable(
             df.to_dict('records'),
             [{'name': i, 'id': i} for i in df.columns],
+            page_size = 10,
 
              style_data={
             'color' : 'grey',
@@ -98,10 +101,12 @@ def parse_contents(contents, filename, date):
             style_table={'height': 400}
 
         ),
+        dcc.Store(id='stored-data', data = df.to_dict('records')),
+        html.Hr()
 
-        ], id= 'first-table-output')
+        ], id= 'first-table-output'),
 
-#        html.Button('submit-button')
+        html.Button('submit-button')
 
         # For debugging, display the raw contents provided by the web browser
         # html.Div('Raw Content', className='raw-content'),
@@ -111,7 +116,7 @@ def parse_contents(contents, filename, date):
         # },className='raw-content')
     ])
 
-@app.callback(Output('output-data-upload', 'children'),
+@app.callback(Output('output-datatable', 'children'),
               Input('upload-data', 'contents'),
               State('upload-data', 'filename'),
               State('upload-data', 'last_modified'))
@@ -123,16 +128,26 @@ def update_output(list_of_contents, list_of_names, list_of_dates):
         return children
 
 
-@app.callback(Output('second-output-data-upload', 'children'),
-              Input('upload-second-data', 'contents'),
-              State('upload-second-data', 'filename'),
-              State('upload-second-data', 'last_modified'))
-def update_output(list_of_contents, list_of_names, list_of_dates):
-    if list_of_contents is not None:
-        children = [
-            parse_contents(c, n, d) for c, n, d in
-            zip(list_of_contents, list_of_names, list_of_dates)]
-        return children
+# @app.callback(Output('second-output-data-upload', 'children'),
+#               Input('upload-second-data', 'contents'),
+#               State('upload-second-data', 'filename'),
+#               State('upload-second-data', 'last_modified'))
+# def update_output(list_of_contents, list_of_names, list_of_dates):
+#     if list_of_contents is not None:
+#         children = [
+#             parse_contents(c, n, d) for c, n, d in
+#             zip(list_of_contents, list_of_names, list_of_dates)]
+#         return children
+
+@app.callback(Output('output-data-upload', 'children'),
+            Input('submit-button', 'n_clicks'),
+            State('stored-data', 'data'))
+def make_graph(n, data):
+    if n is None:
+        return dash.no_update
+    else:
+        bar_fig = px.bar(data, x = 'STATE', y = 'Flower')
+        return dcc.Graph(figure=bar_fig)
         
 
 
