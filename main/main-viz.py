@@ -18,6 +18,7 @@ from numpy import mean
 import classes as cl
 import utilities as u
 import visualization
+from visualization_plotly import plot_final_visualization
 
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
@@ -119,11 +120,8 @@ def make_graphs(n, data):
     if n is None:
         return dash.no_update
     else:
-            df = cl.DataFiles()
-            delivered = df.create_dataframes('Delivered')
-            failed = df.create_dataframes('Failed')
-    
-            visualization.plot_final_visualization(failed, delivered)
+        plot_final_visualization()
+        
 
 
 if __name__ == '__main__':
