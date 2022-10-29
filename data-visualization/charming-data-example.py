@@ -112,7 +112,6 @@ def make_graphs(n, data, x_data, y_data):
         return dash.no_update
     else:
         bar_fig = px.bar(data, x=x_data, y=y_data)
-        # print(data)
         return dcc.Graph(figure=bar_fig)
 
 
