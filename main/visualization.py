@@ -5,7 +5,10 @@ import numpy as np
 import classes as cl
 import utilities as u
 from numpy import mean   
-   
+from time import time_ns
+
+from matplotlib.backends.backend_agg import FigureCanvasAgg
+
 def plot_final_visualization(dataframe1, dataframe2):
     '''
     This function creates the final visualization of the project. 
@@ -52,14 +55,6 @@ def plot_final_visualization(dataframe1, dataframe2):
 
     u.set_chart_config('Mean of Total Score by Cluster\nFailed Attempts', 'Cluster', '')
     
-    plt.savefig('data-analysis-cluster.png')
-
-     # Make the PNG
-    # canvas = FigureCanvasAgg(fig)
-    # # The size * the dpi gives the final image size
-    # #   a4"x4" image * 80 dpi ==> 320x320 pixel image
-    # fig_path = f"rand-poiss-hist_{time_ns()}.png"
-    # canvas.print_figure(fig_path, dpi=150, bbox_inches="tight")
-    # return fig_path
-
+    path = '/Users/daianeklein/Documents/DS/clusters-analysis-dash/data-analysis-webapp/main/media/'
+    plt.savefig(path + 'data-analysis-cluster.png', dpi = 300)
     #plt.show();

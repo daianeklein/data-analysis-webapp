@@ -126,6 +126,5 @@ def make_graphs(n, data):
             visualization.plot_final_visualization(failed, delivered)
 
 
-
 if __name__ == '__main__':
     app.run_server(debug=True)
