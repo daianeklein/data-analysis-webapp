@@ -23,39 +23,29 @@ from numpy import mean
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
-#app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
-app = dash.Dash(__name__, external_stylesheets=[dbc.themes.SKETCHY],
-                meta_tags = [{'name' : 'viewport',
-                              'content' : 'width=dice_width, initial-scale=1.0'}])
-
-app.layout = dbc.Container([ 
-        html.Div([
-        html.P(' '),
-        html.Div(id = 'first-line-separator'),
-        html.Div([
-        html.H2('Customer Analysis and Segmentation', id = 'general-title'),
-        html.H5('This is a subtitle - Describe the the aim of the analysis and the dashboard',
-                                                            id = 'dashboard-subtitle')
-        ], className = 'div-header-config'),
-
-    dbc.Row([
-        dbc.Col([
-        dcc.Upload(
-        id='upload-data-first',
+app.layout = html.Div([
+    dcc.Upload(
+        id='upload-data',
         children=html.Div([
             'Drag and Drop or ',
             html.A('Select Files')
-        ], className='drag-and-drop-text'),
-        multiple=True),
-
-    html.Div(id='output-div-first'),
-    html.Div(id='output-datatable-first')
-
-], width = {'size' : 5}, id='box-drag-and-drop-first'),
-
-])
-])
+        ]),
+        style={
+            'width': '100%',
+            'height': '60px',
+            'lineHeight': '60px',
+            'borderWidth': '1px',
+            'borderStyle': 'dashed',
+            'borderRadius': '5px',
+            'textAlign': 'center',
+            'margin': '10px'
+        },
+        # Allow multiple files to be uploaded
+        multiple=True
+    ),
+    html.Div(id='output-data-upload'),
 ])
 
 def parse_contents(contents, filename, date):
@@ -78,15 +68,12 @@ def parse_contents(contents, filename, date):
 
     return html.Div([
         html.H5(filename),
-        html.Button(id="submit-button-first", children="Create Graph"),
-        html.Hr(),
+        html.H6(datetime.datetime.fromtimestamp(date)),
 
         dash_table.DataTable(
-            data=df.to_dict('records'),
-            columns=[{'name': i, 'id': i} for i in df.columns],
-            page_size=15
+            df.to_dict('records'),
+            [{'name': i, 'id': i} for i in df.columns]
         ),
-        dcc.Store(id='stored-data-first', data=df.to_dict('records')),
 
         html.Hr(),  # horizontal line
 
@@ -98,23 +85,16 @@ def parse_contents(contents, filename, date):
         })
     ])
 
-@app.callback(Output('output-datatable-first', 'children'),
-              Input('upload-data-first', 'contents'),
-              State('upload-data-first', 'filename'),
-              State('upload-data-first', 'last_modified'))
+@app.callback(Output('output-data-upload', 'children'),
+              Input('upload-data', 'contents'),
+              State('upload-data', 'filename'),
+              State('upload-data', 'last_modified'))
 def update_output(list_of_contents, list_of_names, list_of_dates):
     if list_of_contents is not None:
         children = [
             parse_contents(c, n, d) for c, n, d in
             zip(list_of_contents, list_of_names, list_of_dates)]
         return children
-
-@app.callback(Output('output-div-first', 'children'),
-             Input('submit-button-first', 'n_clicks'),
-             State('stored-data-first', 'data'))
-def test(data):
-    bar_fig = px.bar(data, x = data['phone_operator'], y = data['os_version'])
-    return dcc.Graph(figure = bar_fig)
 
 if __name__ == '__main__':
     app.run_server(debug=True)
