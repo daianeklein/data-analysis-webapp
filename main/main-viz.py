@@ -45,7 +45,15 @@ app.layout = html.Div([
         # Allow multiple files to be uploaded
         multiple=True
     ),
+    html.Div([
+        html.H5('Upload data'),
+        html.Button(id = 'submit-button', children = 'Create Chart')
+    ]),
     html.Div(id='output-data-upload'),
+
+    html.Div(
+        id = 'div-chart'
+    )
 ])
 
 def parse_contents(contents, filename, date):
@@ -70,10 +78,15 @@ def parse_contents(contents, filename, date):
         html.H5(filename),
         html.H6(datetime.datetime.fromtimestamp(date)),
 
+
         dash_table.DataTable(
             df.to_dict('records'),
-            [{'name': i, 'id': i} for i in df.columns]
+            [{'name': i, 'id': i} for i in df.columns],
+            page_size=10
         ),
+
+        dcc.Store(id='stored-data', data=df.to_dict('records')),
+        
 
         html.Hr(),  # horizontal line
 
@@ -95,6 +108,20 @@ def update_output(list_of_contents, list_of_names, list_of_dates):
             parse_contents(c, n, d) for c, n, d in
             zip(list_of_contents, list_of_names, list_of_dates)]
         return children
+
+@app.callback(Output('div-chart', 'children'),
+             Input('submit-button', 'n_clicks'),
+             State('stored-data', 'data'))
+
+def crate_chart(n, data):
+    if n is None:
+        return dash.no_update
+    else:
+        bar_fig = px.bar(data, x='phone_operator', y='os_version')
+        return dcc.Graph(figure=bar_fig)
+
+
+
 
 if __name__ == '__main__':
     app.run_server(debug=True)

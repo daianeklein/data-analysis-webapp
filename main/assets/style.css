@@ -1,0 +1,12 @@
+body {
+	font-family: sans-serif;
+	color: rgb(82, 0, 183);
+}
+
+#output-data-upload {
+    background-color: red;
+}
+
+.div-chart {
+    background-color: red;
+}
