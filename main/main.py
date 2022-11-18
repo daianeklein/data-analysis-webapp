@@ -7,13 +7,13 @@ from numpy import mean
 
 import classes as cl
 import utilities as u
-import visualization
-
+#import visualization
+import visualization_plotly
 
 if __name__ == '__main__':    
     df = cl.DataFiles()
     delivered = df.create_dataframes('Delivered')
     failed = df.create_dataframes('Failed')
     
-    visualization.plot_final_visualization(failed,delivered)
+    visualization_plotly.plot_final_visualization_plotly(failed,delivered)
     

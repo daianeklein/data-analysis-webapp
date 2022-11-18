@@ -19,11 +19,7 @@ import plotly.graph_objects as go
 
 from matplotlib.figure import Figure
 from plotly.subplots import make_subplots
-
-
 import plotly.express as px
-
-
 import pandas as pd
 
 import seaborn as sns
@@ -37,7 +33,7 @@ df = cl.DataFiles()
 delivered = df.create_dataframes('Delivered')
 failed = df.create_dataframes('Failed')
 
-def plot_final_visualization(dataframe1, dataframe2):
+def plot_final_visualization_plotly(dataframe1, dataframe2):
 
     fig = make_subplots(rows=1, cols=2)
     u.create_jitter_chart(dataframe1, 'pricepoint_sum', 'total_score')
