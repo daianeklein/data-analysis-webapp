@@ -30,11 +30,11 @@ import utilities as u
 
 def plot_final_visualization(data, x_data, y_data):
 
-    fig = make_subplots(rows=1, cols=2)
-    px.bar(data, x=x_data, y=y_data)
+ #   fig = make_subplots(rows=1, cols=2)
+    fig = px.bar(data, x = x_data, y = y_data)
     # u.create_jitter_chart(data, 'pricepoint_sum', 'total_score')
 
-    #fig.add_trace(go.Scatter(x = x_data, y = y_data), row = 1, col = 2)
+  #  fig.add_trace(go.Bar(x = x_data, y = y_data), row = 1, col = 2)
     # mode = 'markers', marker_color=data['cluster']), row = 1, col = 2)
 
 
@@ -48,7 +48,8 @@ def plot_final_visualization(data, x_data, y_data):
     # #overlay both histograms
     # fig.update_layout(barmode='overlay')
     # fig.update_traces(opacity=0.75)
-    return fig
+    return dcc.Graph(figure=fig)
+    #return fig
     #fig.show()
 
 

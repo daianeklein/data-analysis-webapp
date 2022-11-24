@@ -10,8 +10,10 @@ import dash_bootstrap_components as dbc
 
 import pandas as pd
 import plotly.express as px
+from plotly.subplots import make_subplots
 
-import data_visualization_plotly as viz
+
+from data_visualization_plotly import plot_final_visualization as viz
 
 
 
@@ -113,9 +115,8 @@ def make_graphs(n, data, x_data, y_data):
     if n is None:
         return dash.no_update
     else:
-        return dcc.Graph(figure = viz.plot_final_visualization(data, x_data, y_data))
-#       bar_fig = px.bar(data, x=x_data, y=y_data)
-#      return dcc.Graph(figure=bar_fig)
+        # bar_fig = px.bar(data, x=x_data, y=y_data)
+        return viz(data, x_data, y_data)
 
 if __name__ == '__main__':
     app.run_server(debug=True)
