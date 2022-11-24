@@ -69,11 +69,6 @@ def parse_contents(contents, filename, date):
         html.H5(filename),
         html.H6(datetime.datetime.fromtimestamp(date)),
         html.P("Inset X axis data"),
-        dcc.Dropdown(id='xaxis-data',
-                     options=[{'label':x, 'value':x} for x in df.columns]),
-        html.P("Inset Y axis data"),
-        dcc.Dropdown(id='yaxis-data',
-                     options=[{'label':x, 'value':x} for x in df.columns]),
         html.Button(id="submit-button", children="Create Graph"),
         html.Hr(),
 
@@ -108,15 +103,15 @@ def update_output(list_of_contents, list_of_names, list_of_dates):
 
 @app.callback(Output('output-div', 'children'),
               Input('submit-button','n_clicks'),
-              State('stored-data','data'),
-              State('xaxis-data','value'),
-              State('yaxis-data', 'value'))
-def make_graphs(n, data, x_data, y_data):
+              State('stored-data','data'))
+  #            State('xaxis-data','value'),
+  #            State('yaxis-data', 'value'))
+def make_graphs(n, data):
     if n is None:
         return dash.no_update
     else:
         # bar_fig = px.bar(data, x=x_data, y=y_data)
-        return viz(data, x_data, y_data)
+        return viz(data,'service', 'pricepoint')
 
 if __name__ == '__main__':
     app.run_server(debug=True)
