@@ -29,23 +29,30 @@ app.layout = html.Div([ # this code section taken from Dash docs https://dash.pl
             'Drag and Drop or ',
             html.A('Select Files')
         ]),
-        style={
-            'width': '100%',
-            'height': '60px',
-            'lineHeight': '60px',
-            'borderWidth': '1px',
-            'borderStyle': 'dashed',
-            'borderRadius': '5px',
-            'textAlign': 'center',
-            'margin': '10px'
-        },
         # Allow multiple files to be uploaded
         multiple=True
     ),
+
     html.Div(id='output-div'),
     html.Div(id='output-datatable'),
-])
 
+    html.Div([
+        html.H3('second data uploaded'),
+        dcc.Upload(
+            id = 'upload-data-second',
+            children = html.Div([
+                'Drag and Drop or ',
+                html.A('Select Files')
+            ]),
+            multiple=True
+        ),
+          
+        html.Div(id='output-div-second'),
+        html.Div(id='output-datatable-second'),
+    ])
+
+
+])
 
 def parse_contents(contents, filename, date):
     content_type, content_string = contents.split(',')
