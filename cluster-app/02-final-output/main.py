@@ -7,7 +7,7 @@ from dash.dependencies import Input, Output, State
 from dash import dcc, html, dash_table
 import dash_bootstrap_components as dbc
 
-
+import functions as f
 import pandas as pd
 import plotly.express as px
 from plotly.subplots import make_subplots
@@ -47,7 +47,7 @@ def parse_contents(contents, filename, date):
         if 'csv' in filename:
             # Assume that the user uploaded a CSV file
             df = pd.read_csv(
-                io.StringIO(decoded.decode('utf-8')))
+                io.StringIO(decoded.decode('utf-8')), sep = ';')
         elif 'xls' in filename:
             # Assume that the user uploaded an excel file
             df = pd.read_excel(io.BytesIO(decoded))
@@ -96,13 +96,13 @@ def update_output(list_of_contents, list_of_names, list_of_dates):
 @app.callback(Output('output-div', 'children'),
               Input('submit-button','n_clicks'),
               State('stored-data','data'))
-def make_graphs(n, data):
+
+def create_df_columns(n, data):
     if n is None:
         return dash.no_update
     else:
-        # bar_fig = px.bar(data, x=x_data, y=y_data)
-        return viz(data,'service', 'pricepoint')
-
+     f.create_days_of_week(data, 'transaction_timestamp')
+     return viz(data,'service', 'pricepoint')
 
 if __name__ == '__main__':
     app.run_server(debug=True)
