@@ -86,12 +86,23 @@ def parse_contents(contents, filename, date):
               Input('upload-data', 'contents'),
               State('upload-data', 'filename'),
               State('upload-data', 'last_modified'))
+
 def update_output(list_of_contents, list_of_names, list_of_dates):
     if list_of_contents is not None:
         children = [
             parse_contents(c, n, d) for c, n, d in
             zip(list_of_contents, list_of_names, list_of_dates)]
-        return children
+ 
+    return children
+            
+        
+
+# def create_df_new_columns(n, data):
+#     if n is None:
+#         return dash.no_update
+#     else:
+#         data = f.create_days_of_week(data, 'transaction_timestamp')
+#     return data
 
 @app.callback(Output('output-div', 'children'),
               Input('submit-button','n_clicks'),
@@ -101,8 +112,10 @@ def create_df_columns(n, data):
     if n is None:
         return dash.no_update
     else:
-     f.create_days_of_week(data, 'transaction_timestamp')
-     return viz(data,'service', 'pricepoint')
+         #f.create_days_of_week(data, 'transaction_timestamp')
+        return viz(data,'service', 'pricepoint')
+       
+    
 
 if __name__ == '__main__':
     app.run_server(debug=True)
